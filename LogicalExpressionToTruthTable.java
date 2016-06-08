@@ -3,22 +3,6 @@ import java.util.Scanner;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-//Sources:
-//String functionality:
-//beginnersbook.com/2013/12/java-strings/
-//
-//Char checking/comparing:
-//https://docs.oracle.com/javase/tutorial/i18n/text/charintro.html
-//
-//How to find the second occurrence of 1 string in another:
-//http://stackoverflow.com/questions/19035893/finding-second-occurrence-of-a-substring-in-a-string-in-java
-//
-//Truth tables and binary values:
-//http://www.ee.surrey.ac.uk/Projects/Labview/gatesfunc/TruthFrameSet.htm
-//
-//Converting multiple boolean expressions in strings to booleans:
-//http://stackoverflow.com/questions/31811315/how-to-convert-a-string-to-boolean-expression
 
 public class LogicalExpressionToTruthTable {
 	private static ArrayList<Character> variables = new ArrayList<Character>(); //ArrayList for the variables in the expression
@@ -34,7 +18,7 @@ public class LogicalExpressionToTruthTable {
 	 * 
 	 */
 	
-	private static void getExpression()throws Exception{
+	public static void getExpression()throws Exception{
 		Scanner input = new Scanner(System.in);  //Scanner object for user input
 		
 		int brackets = 0; //integer object for the number of brackets in the expression
@@ -50,50 +34,57 @@ public class LogicalExpressionToTruthTable {
 		
 		String expression = input.nextLine();  //Get user input
 		
+		input.close();
+		
 		//If check to make sure user input was obtained
 		if (expression.length() == 0){
 			throw new Exception("The input was empty, unable to continue."); //Exception if no user input
 		}
 		
-		//For loop to iterate through the given expression
-		for(int i = 0; i < expression.length();i++){
+		//Converting the string to a character array
+		char[] expChars = expression.toCharArray();
+		
+		
+		//For loop to iterate through the given expChars
+		for(int i = 0; i < expChars.length;i++){
 			
 			//if check to see if the first character is a letter
-			if(expression.charAt(i) >= 'a' && expression.charAt(i) <= 'z' || 
-				expression.charAt(i) >= 'A' && expression.charAt(i) <= 'Z'){
+			if(expChars[i] >= 'a' && expChars[i] <= 'z' || 
+				expChars[i] >= 'A' && expChars[i] <= 'Z'){
 					
 				//if check to make sure i is not the last entry, and throws an exception if it is not
 				// followed by a proper argument
-				if(i != (expression.length() - 1) &&
-						expression.charAt(i+1) != '*' &&
-						expression.charAt(i+1) != '+' &&
-						expression.charAt(i+1) != ')'){
+				if(i != (expChars.length - 1) &&
+						expChars[i+1] != '*' &&
+						expChars[i+1] != '+' &&
+						expChars[i+1] != ')'){
 					
-					//exception if the expression has the wrong syntax
+					//exception if the expChars has the wrong syntax
 					throw new Exception("Syntax error: A variable must be followed by a"
 							+ "\n *, +,or  ).");
 				}
 				
 				//Checks if the variable array is empty
 				if(variables.isEmpty()){
-					variables.add(expression.charAt(i)); //if so, adds the character to the array
+					variables.add(expChars[i]); //if so, adds the character to the array
 				
-				}else{ //compare elements in variables with the new character
+				}else{ 
+					//compare elements in variables with the new character
 					//For loop to iterate through each element in variables with a counter j starting at 0
 					for(int j = 0; j <variables.size(); j++){
 						
 						//Check if the character is already in variables
-						if((expression.charAt(i)== variables.get(j))){
+						if((expChars[i]== variables.get(j))){
 							//If it is present, continue on to the next variable
 							continue; //Check the next variable
 							
 						//check if the current char is smaller than (comes before) the characters in variables
-						}else if(expression.charAt(i) < variables.get(j)){
+						}else if(expChars[i] < variables.get(j)){
 							
 							//If so, insert the new char at the location in variables, and
 							// move the variables char to the next location
 							
-							variables.add(j, expression.charAt(i));
+							variables.add(j, expChars[i]);
 							break;  //After the insertion, check the next character
 													
 						}
@@ -102,17 +93,17 @@ public class LogicalExpressionToTruthTable {
 				}
 				
 				//Check if the character is a bracket
-			}else if(expression.charAt(i) == '(' || expression.charAt(i) == ')'){
+			}else if(expChars[i] == '(' || expChars[i] == ')'){
 				
 				//For open brackets
-				if(expression.charAt(i) == '('){
+				if(expChars[i] == '('){
 					
 					//First check for syntax errors such that an opening bracket is not followed by
 					// a variable, another open bracket, or a NOT
-					if(i != expression.length()-1 &&
-							!((expression.charAt(i+1)>= 'a' && expression.charAt(i+1) <= 'z')||
-							(expression.charAt(i+1) >= 'A' && expression.charAt(i+1) <= 'Z')||
-							expression.charAt(i+1) == '-' || expression.charAt(i+1) == '(')){
+					if(i != expChars.length-1 &&
+							!((expChars[i+1]>= 'a' && expChars[i+1] <= 'z')||
+							(expChars[i+1] >= 'A' && expChars[i+1] <= 'Z')||
+							expChars[i+1] == '-' || expChars[i+1] == '(')){
 						
 						//Throw exception for syntax error
 						throw new Exception("Syntax Error: An open bracket '(' must be followed by"
@@ -124,10 +115,10 @@ public class LogicalExpressionToTruthTable {
 				}else{
 					
 					//check for syntax errors such that ')' is not followed by *, +, or )
-					if(i != expression.length() -1 &&
-							expression.charAt(i+1)!= '*' &&
-							expression.charAt(i+1)!= '+' &&
-							expression.charAt(i+1) != ')'){
+					if(i != expChars.length -1 &&
+							expChars[i+1]!= '*' &&
+							expChars[i+1]!= '+' &&
+							expChars[i+1] != ')'){
 						
 						//Exception if syntax is wrong
 						throw new Exception("Syntax error: a ')' must be followed by nothing(if the end), "
@@ -159,22 +150,22 @@ public class LogicalExpressionToTruthTable {
 						for(int k = i-1; k >=0; k--){
 							
 							//Check for closing brackets
-							if(expression.charAt(k) == ')'){
+							if(expChars[k] == ')'){
 								counter++; //Increment the counter
 							
 							//check for open brackets
-							}else if(expression.charAt(k) == '('){
+							}else if(expChars[k] == '('){
 								counter --; //decrement the counter
 								
 								//check if the counter = 0
 								if(counter == 0){
 									start = k; //if so, save the starting index placement
 									
-									//Take the subexpression by itself
+									//Take the subexpChars by itself
 									String sub = expression.substring(start, end);
 									
-									//Add the subexpression as long as it is not a single variable or
-									//the complete expression
+									//Add the subexpressions as long as it is not a single variable or
+									//the complete expressions
 									if(sub != expression && sub.length() > 3){
 										subExpressions.add(sub);  //Add the subexpression to our subExpressions array
 									}
@@ -189,19 +180,28 @@ public class LogicalExpressionToTruthTable {
 				}
 				
 			//For operators
-			}else if(expression.charAt(i)== '*' ||
-					expression.charAt(i) == '+' ||
-					expression.charAt(i) == '-'){
+			}else if(expChars[i]== '*' ||
+					expChars[i] == '+' ||
+					expChars[i] == '-'){
 				
 				//Syntax check to make sure AND and OR are not the start of an expression
-				if (i == 0 && expression.charAt(i) != '-'){
+				if (i == 0 && expChars[i] != '-'){
 					//Exception thrown
 					throw new Exception("Syntax Error: AND/OR cannot be the beginning of an expression");
 				
+				//An operator cannot be at the end
+				}else if(i == expChars.length -1){
+					throw new Exception("Syntax Error: An operator cannot be the last entry.");
+					
+				//An open bracket cannot come before AND and OR	
+				}else if(i != 0 && expChars[i-1] == '(' && expChars[i] != '-'){
+					
+					throw new Exception("Syntax error: An open bracket cannot come before AND/OR.");
+					
 				//Operators cannot be followed by another operator (AND/OR) or by closed brackets
-				}else if(expression.charAt(i+1)== ')'||
-						expression.charAt(i+1)== '*'||
-						expression.charAt(i+1) == '+'){
+				}else if(expChars[i+1]== ')'||
+						expChars[i+1]== '*'||
+						expChars[i+1] == '+'){
 					//Exception thrown
 					throw new Exception("Syntax Error: AND/OR cannot be followed by AND/OR or closed bracket ')' ");
 				}
@@ -222,7 +222,6 @@ public class LogicalExpressionToTruthTable {
 			subExpressions.add(expression);
 		}
 		
-		input.close();
 		
 	}
 	
@@ -277,7 +276,7 @@ public class LogicalExpressionToTruthTable {
 				
 				//Add zeros to the beginning of the binary string until it's length is
 				//equal to the number of columns, iterating over each column starting at 0
-				for(int j = 0; j < variables.size();j++){
+				for(int j = 0; j < variables.size() - rowLength;j++){
 					binaryRows = "0" + binaryRows; //Add 0 to the beginning of the String
 				}
 				
@@ -333,7 +332,7 @@ public class LogicalExpressionToTruthTable {
 						for(int m = 0; m < variables.size(); m++){
 							
 							//If check to find the proper column
-							if(tTable[0][i].charAt(j) == tTable[0][m].charAt(0)){
+							if(tTable[0][i].charAt(k) == tTable[0][m].charAt(0)){
 								boolString = boolString + tTable[j][m]; //Adding the truth value of the variable
 								break;  //Break out of the loop when a match is found
 							}
@@ -341,6 +340,7 @@ public class LogicalExpressionToTruthTable {
 						}
 						
 					}
+				}
 					
 					
 					
@@ -360,11 +360,10 @@ public class LogicalExpressionToTruthTable {
 				//Adding the boolean value to the correct cell in the truth table as a string
 				tTable[j][i] = vBool.toString();
 				}
-			}
+			
+		
 		}
-		
 		return tTable;
-		
 	}
 	
 	/*SP3
@@ -403,7 +402,7 @@ public class LogicalExpressionToTruthTable {
 			getExpression();
 			
 			//SP2 using class variables for SP1 results
-			String[][] truthTable = createTTable(variables, subExpressions);
+			String[][] truthTable =createTTable(variables, subExpressions);
 			
 			//SP3 using SP2 results
 			showTTable(truthTable);
