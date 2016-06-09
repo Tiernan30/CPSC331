@@ -4,6 +4,7 @@ import java.util.Scanner;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+
 public class LogicalExpressionToTruthTable {
 	private static ArrayList<Character> variables = new ArrayList<Character>(); //ArrayList for the variables in the expression
 	private static ArrayList<String> subExpressions = new ArrayList<String>(); //ArrayList for the subexpressions
@@ -41,11 +42,11 @@ public class LogicalExpressionToTruthTable {
 			throw new Exception("The input was empty, unable to continue."); //Exception if no user input
 		}
 		
-		//Converting the string to a character array
+		//Converting the string to a character array for slightly more efficient access
 		char[] expChars = expression.toCharArray();
 		
 		
-		//For loop to iterate through the given expChars
+		//For loop to iterate through the given expressions
 		for(int i = 0; i < expChars.length;i++){
 			
 			//if check to see if the first character is a letter
@@ -59,7 +60,7 @@ public class LogicalExpressionToTruthTable {
 						expChars[i+1] != '+' &&
 						expChars[i+1] != ')'){
 					
-					//exception if the expChars has the wrong syntax
+					//exception if the expression has the wrong syntax
 					throw new Exception("Syntax error: A variable must be followed by a"
 							+ "\n *, +,or  ).");
 				}
@@ -76,7 +77,7 @@ public class LogicalExpressionToTruthTable {
 						//Check if the character is already in variables
 						if((expChars[i]== variables.get(j))){
 							//If it is present, continue on to the next variable
-							continue; //Check the next variable
+							break; //Check the next variable
 							
 						//check if the current char is smaller than (comes before) the characters in variables
 						}else if(expChars[i] < variables.get(j)){
@@ -87,6 +88,9 @@ public class LogicalExpressionToTruthTable {
 							variables.add(j, expChars[i]);
 							break;  //After the insertion, check the next character
 													
+						}else if(j == variables.size() -1){
+							variables.add(expChars[i]);
+							break;
 						}
 						
 					}
@@ -289,8 +293,9 @@ public class LogicalExpressionToTruthTable {
 				// or F for false into the truth table columns.
 				if(binaryRows.charAt(j) == '0'){
 					tTable[i][j] = "true";
-				}else
+				}else{
 					tTable[i][j] = "false";
+				}
 			}
 		}
 		//For loop to add truth values for each sub expression, beginning after the end of the variables
